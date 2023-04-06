@@ -21,6 +21,7 @@ static const Worker_T INVALID_ID = (unsigned int)-1;
 
 // Add prototypes for any helper functions here
 bool schedhelp(size_t day, size_t shift, map<Worker_T, int> numshifts, AvailabilityMatrix& avail, const size_t dailyNeed, DailySchedule& sched);
+void fillshifts(map<Worker_T, int>& numshifts, int i, int k, const size_t maxShifts);
 
 // Add your implementation of schedule() and other helper functions here
 
@@ -57,9 +58,7 @@ bool schedule(
 
     // maps each worker to how many shifts they have
     map<Worker_T, int> numshifts;
-    for(int i = 0; i < k; i++){
-        numshifts.insert(make_pair(i, maxShifts));
-    }
+		fillshifts(numshifts, 0, k, maxShifts);
 
     // initializes sched
     for(unsigned i = 0; i < avail.size(); i++){
@@ -110,5 +109,16 @@ bool schedhelp(size_t day, size_t shift, map<Worker_T, int> numshifts, Availabil
         }
     }
     return false;
+}
+
+void fillshifts(map<Worker_T, int>& numshifts, int i, int k, const size_t maxShifts){
+	if(i == k){
+		return;
+	}
+	else{
+		numshifts.insert(make_pair(i, maxShifts));
+		fillshifts(numshifts, i + 1, k, maxShifts);
+	}
+
 }
 
