@@ -13,7 +13,7 @@ using namespace std;
 
 
 // Add prototypes of helper functions here
-void helper(set<string>& words, set<string> dict, string in, string floating, int idx, int d);
+void helper(set<string>& words, const set<string>& dict, string in, string floating, unsigned idx, unsigned d);
 
 // Definition of primary wordle function
 std::set<std::string> wordle(
@@ -45,7 +45,7 @@ std::set<std::string> wordle(
 }
 
 // Define any helper functions here
-void helper(set<string>& words, set<string> dict, string in, string floating, unsigned idx, unsigned d){
+void helper(set<string>& words, const set<string>& dict, string in, string floating, unsigned idx, unsigned d){
 	string temp;
 
 	// stops when reaches end of length
@@ -57,21 +57,22 @@ void helper(set<string>& words, set<string> dict, string in, string floating, un
 		return;
 	}
 
-	// recurse if not a -
-	if(in[idx] != '-'){
-		helper(words, dict, in, floating, idx + 1, d);
-	}
-
 	// if less dashes than floating
 	if(d < floating.size()){
 		return;
+	}
+
+	// recurse if not a -
+	if(in[idx] != '-'){
+		helper(words, dict, in, floating, idx + 1, d);
 	}
 
 	// loop through every single possibility in floating
 	for(unsigned i = 0; i < floating.size(); i++){
 		temp = in;
 		temp[idx] = floating[i];
-		helper(words, dict, temp, floating, idx + 1, d - 1);
+		string newfloating = floating.substr(0,i) + floating.substr(i + 1, floating.size() - i - 1);
+		helper(words, dict, temp, newfloating, idx + 1, d - 1);
 	}
 
 	if(d > floating.size()){
@@ -83,6 +84,4 @@ void helper(set<string>& words, set<string> dict, string in, string floating, un
 			helper(words, dict, temp, floating, idx + 1, d - 1);
 		}
 	}
-
-	return;
 }
